@@ -6,23 +6,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
+    let isListening = false;
     const transcriptionDiv = document.getElementById('transcription');
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
 
     startBtn.addEventListener('click', () => {
-        recognition.start();
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        console.log('Speech recognition started');
-    });
+        isListening = !isListening;
+        if(isListening == true){
+            recognition.start();
+            startBtn.innerText = 'Stop Recognition'
+            console.log('Speech recognition started');
+        }else{
+            recognition.stop();
+            startBtn.innerText = 'Start Recognition'
+            console.log('Speech recognition stopped');
+        }
 
-    stopBtn.addEventListener('click', () => {
-        recognition.stop();
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        console.log('Speech recognition stopped');
     });
 
     recognition.continuous = true;
@@ -52,16 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // map errors
     recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
+        startBtn.innerText = 'Stop Recognition'
     };
 
     recognition.onend = () => {
         console.log('Speech recognition ended');
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
+        startBtn.innerText = 'Start Recognition'
     };
-
-    // Initialize button states
-    stopBtn.disabled = true;
 });
